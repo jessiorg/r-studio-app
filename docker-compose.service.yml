@@ -1,0 +1,78 @@
+# RStudio Server Service Definition
+# Add this to your main docker-compose.yml file
+
+version: '3.8'
+
+services:
+  rstudio-server:
+    container_name: rstudio-server
+    build:
+      context: /data/rstudio-server
+      dockerfile: Dockerfile
+    image: rstudio-server:latest
+    restart: unless-stopped
+    
+    # Environment variables
+    environment:
+      # User credentials
+      - USER=rstudio
+      - PASSWORD=rstudio123  # CHANGE THIS!
+      
+      # RStudio Configuration
+      - DISABLE_AUTH=false
+      - ROOT=false
+      
+      # Resource settings
+      - RSTUDIO_SESSION_TIMEOUT=120
+    
+    # Port mapping (internal use, proxied by Nginx)
+    ports:
+      - "8787:8787"
+    
+    # Volume mounts
+    volumes:
+      # User home directories
+      - /data/rstudio-server/home:/home/rstudio
+      # Custom R libraries
+      - /data/rstudio-server/libs:/usr/local/lib/R/site-library-custom
+      # Configuration
+      - /data/rstudio-server/config/rserver.conf:/etc/rstudio/rserver.conf
+      - /data/rstudio-server/config/rsession.conf:/etc/rstudio/rsession.conf
+      # Logs
+      - /data/rstudio-server/logs:/var/log/rstudio
+      # Examples
+      - /data/rstudio-server/examples:/home/rstudio/trading
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 4G
+        reservations:
+          cpus: '2'
+          memory: 2G
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8787/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Network
+    networks:
+      - webproxy
+
+# Networks
+networks:
+  webproxy:
+    external: true
