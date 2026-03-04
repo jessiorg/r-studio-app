@@ -1,0 +1,66 @@
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# RStudio
+.rstudio/
+rstudio-prefs.json
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+*.log.*
+/var/log/
+
+# User data
+home/*/
+!home/.gitkeep
+
+# Libraries
+libs/
+*.rdb
+*.rdx
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Docker
+.dockerignore
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Data files
+data/
+*.csv
+*.xlsx
+*.rds
+
+# Sensitive
+secrets/
+credentials/
